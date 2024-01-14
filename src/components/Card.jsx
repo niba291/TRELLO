@@ -20,7 +20,7 @@ export function Card({item}) {
     };
 
     return (
-        <article ref={setNodeRef} className="px-2 py-1 my-1 rounded border-gray-base border" style={style} {...listeners} {...attributes}>
+        <article ref={setNodeRef} className="px-2 py-1 my-1 rounded border-gray-base border bg-white" style={style} {...listeners} {...attributes}>
             {item.name}
         </article>
     );
