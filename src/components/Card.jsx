@@ -9,18 +9,19 @@ export function Card({item}) {
         listeners, 
         setNodeRef, 
         transform,
-        transition
+        transition,
+        isDragging
     }               = useSortable({
         id          : item.id,
     });
 
     const style     = {
-        transform: CSS.Transform.toString(transform),
-        transition
+        transform   : CSS.Transform.toString(transform),
+        transition,
     };
 
     return (
-        <article ref={setNodeRef} className="px-2 py-1 my-1 rounded border-gray-base border bg-white" style={style} {...listeners} {...attributes}>
+        <article ref={setNodeRef} className={`px-2 py-1 my-1 rounded border-gray-base border bg-white ${isDragging ? "opacity-50 border-sky-400" : ""}`} style={style} {...listeners} {...attributes}>
             {item.name}
         </article>
     );
