@@ -1,26 +1,16 @@
 // IMPORT===================================================================================================================
 import { useState }                                                                             from "react";
-// import { sortableKeyboardCoordinates, arrayMove }                                               from "@dnd-kit/sortable";
-import { JSONPath }                                                                             from "jsonpath-plus";
+// import { JSONPath }                                                                             from "jsonpath-plus";
 // COMPONENTS===============================================================================================================
-// import { 
-//     DndContext, 
-//     closestCorners, 
-//     PointerSensor, 
-//     useSensor, 
-//     useSensors, 
-//     KeyboardSensor, 
-//     DragOverlay
-// }                                                                                               from "@dnd-kit/core";
+import { DragDropContext }                                                                      from "react-beautiful-dnd";
 import { Container }                                                                            from "../components/Container";
-import { Card }                                                                                 from "../components/Card";
+import { JSONPath } from "jsonpath-plus";
 
 function App() {
 
-    const [active, setActive]       = useState();
     const [data, setData]           = useState([
         {
-            id                      : 1,
+            id                      : "A",
             name                    : "name 1",
             items                   : [
                 {id: 1, name: "test 1"},
@@ -29,7 +19,7 @@ function App() {
             ]
         },
         {
-            id                      : 2,
+            id                      : "B",
             name                    : "name 2",
             items                   : [
                 {id: 4, name: "test"},
@@ -39,74 +29,108 @@ function App() {
         }
     ]);
 
-    // const handleDragStart           = (event) => {
-    //     const jsonpath              = JSONPath({
-    //         path                    : `$..items[?(@.id==${event.active.id})]`,
-    //         json                    : data
-    //     });
-
-    //     if(jsonpath === undefined){
-    //         return;
-    //     }
-
-    //     setActive(jsonpath[0]);
-    // }
-
-    // const handleDragEnd             = () => {
-    //     setActive(null);
-    // };
-
-    // const handleDragOver            = (event) => {
-    //     const jsonPathActive        = JSONPath({
-    //         path                    : `$..items[?(@.id==${event.active.id})]`,
+    // const handleDragEnd             = (result) => {
+    //     const { 
+    //         source, 
+    //         destination 
+    //     }                           = result;
+    //     const pathSource            = JSONPath({
     //         json                    : data,
+    //         path                    : `$.[?(@.id=='${source.droppableId}')].items[${source.index}]`,
     //         resultType              : "pointer"
     //     })[0].split("/");
-    //     const jsonPathOver          = JSONPath({
-    //         path                    : `$..items[?(@.id==${event.over.id})]`,
+    //     const pathDestination       = JSONPath({
     //         json                    : data,
+    //         path                    : `$.[?(@.id=='${destination.droppableId}')].items[${destination.index}]`,
     //         resultType              : "pointer"
     //     })[0].split("/");
-    //     const idContainerActive     = parseInt(jsonPathActive[1]);
-    //     const idContainerOver       = parseInt(jsonPathOver[1]);
-    //     const idItemActive          = parseInt(jsonPathActive[jsonPathActive.length - 1]);
-    //     const idItemOver            = parseInt(jsonPathOver[jsonPathOver.length - 1]);
 
-    //     if(idContainerActive === idContainerOver){
-    //         data[idContainerActive].items = arrayMove(data[idContainerActive].items, idItemActive, idItemOver);
+    //     pathSource.shift();
+    //     pathDestination.shift();
+
+    //     const itemsSource           = JSONPath({
+    //         json                    : data,
+    //         path                    : `$.[${pathSource.slice(0, pathSource.length - 1).join("][")}]`,
+    //     })[0];
+    //     const itemsDestination      = JSONPath({
+    //         json                    : data,
+    //         path                    : `$.[${pathDestination.slice(0, pathSource.length - 1).join("][")}]`,
+    //     })[0];
+    //     const element               = JSONPath({
+    //         json                    : data,
+    //         path                    : `$.[${pathSource.join("][")}]`,
+    //     })[0];
+        
+    //     if(pathSource[0] === pathDestination[0]){
+    //         let auxData             = itemsSource.filter((item, index) => index !== source.index);
+    //         data[pathSource[0]].items = [
+    //             ...auxData.slice(0, destination.index),
+    //             element,
+    //             ...auxData.slice(destination.index)
+    //         ];
     //     }else{
-    //         data[idContainerOver].items.push(data[idContainerActive].items[idItemActive]);
-    //         data[idContainerActive].items.splice(idItemActive, 1);
-    //         // data[idContainerOver].items = arrayMove(data[idContainerOver].items, data[idContainerOver].items.length - 1, idItemOver);
+    //         let auxData             = itemsSource.filter((item, index) => index !== source.index);
+    //         data[pathSource[0]].items = auxData;
+    //         data[pathDestination[0]].items = [
+    //             ...itemsDestination.slice(0, destination.index),
+    //             element,
+    //             ...itemsDestination.slice(destination.index)
+    //         ];
     //     }
 
     //     setData(data);
-    // }
 
-    // const sensors = useSensors(
-    //     useSensor(PointerSensor),
-    //     useSensor(KeyboardSensor, {
-    //       coordinateGetter: sortableKeyboardCoordinates
-    //     })
-    // );
+    // };
+
+    const handleDragEnd             = (result) => {
+        // const { draggableId, source, destination } = val;
+
+        // const [sourceGroup] = data.filter(
+        //     column => column.groupName === source.droppableId
+        // );
+
+        // const [destinationGroup] = destination ? data.filter(column => column.groupName === destination.droppableId) : { ...sourceGroup };
+
+
+        // const [movingTask] = sourceGroup.items.filter(t => t.id === draggableId);
+
+        // const newSourceGroupTasks = sourceGroup.items.splice(source.index, 1);
+        // const newDestinationGroupTasks = destinationGroup.tasks.splice(
+        //     destination.index,
+        //     0,
+        //     movingTask
+        // );
+
+        // const newTaskList = data.map(column => {
+        //     if (column.groupName === source.groupName) {
+        //         return {
+        //         groupName: column.groupName,
+        //         tasks: newSourceGroupTasks
+        //         };
+        //     }
+        //     if (column.groupName === destination.groupName) {
+        //         return {
+        //         groupName: column.groupName,
+        //         tasks: newDestinationGroupTasks
+        //         };
+        //     }
+        //     return column;
+        // });
+
+        console.log(newTaskList);
+
+        // setData(newTaskList);
+    };
 
     return (
-        // <DndContext 
-        //     collisionDetection      = {closestCorners}
-        //     onDragStart             = {handleDragStart}
-        //     onDragEnd               = {handleDragEnd}
-        //     onDragOver              = {handleDragOver}
-        //     sensors                 = {sensors}         
-        // >
-            
-        // </DndContext>
-        <main className="container flex flex-wrap">                
-            {data.map((item, index) => {
-                return (                            
-                    <Container key={index} id={item.id} name={item.name} items={item.items}></Container>
-                );
-            })}
-            {/* <DragOverlay>{active && <Card item={active}/>}</DragOverlay> */}
+        <main className="container flex flex-wrap">
+            <DragDropContext onDragEnd={handleDragEnd}>
+                {data.map((item, index) => {
+                    return (                          
+                        <Container key={index} id={item.id} name={item.name} items={item.items}></Container>
+                    );
+                })}
+            </DragDropContext>
         </main>
     )
 }
