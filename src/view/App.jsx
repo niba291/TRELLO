@@ -29,97 +29,37 @@ function App() {
         }
     ]);
 
-    // const handleDragEnd             = (result) => {
-    //     const { 
-    //         source, 
-    //         destination 
-    //     }                           = result;
-    //     const pathSource            = JSONPath({
-    //         json                    : data,
-    //         path                    : `$.[?(@.id=='${source.droppableId}')].items[${source.index}]`,
-    //         resultType              : "pointer"
-    //     })[0].split("/");
-    //     const pathDestination       = JSONPath({
-    //         json                    : data,
-    //         path                    : `$.[?(@.id=='${destination.droppableId}')].items[${destination.index}]`,
-    //         resultType              : "pointer"
-    //     })[0].split("/");
-
-    //     pathSource.shift();
-    //     pathDestination.shift();
-
-    //     const itemsSource           = JSONPath({
-    //         json                    : data,
-    //         path                    : `$.[${pathSource.slice(0, pathSource.length - 1).join("][")}]`,
-    //     })[0];
-    //     const itemsDestination      = JSONPath({
-    //         json                    : data,
-    //         path                    : `$.[${pathDestination.slice(0, pathSource.length - 1).join("][")}]`,
-    //     })[0];
-    //     const element               = JSONPath({
-    //         json                    : data,
-    //         path                    : `$.[${pathSource.join("][")}]`,
-    //     })[0];
-        
-    //     if(pathSource[0] === pathDestination[0]){
-    //         let auxData             = itemsSource.filter((item, index) => index !== source.index);
-    //         data[pathSource[0]].items = [
-    //             ...auxData.slice(0, destination.index),
-    //             element,
-    //             ...auxData.slice(destination.index)
-    //         ];
-    //     }else{
-    //         let auxData             = itemsSource.filter((item, index) => index !== source.index);
-    //         data[pathSource[0]].items = auxData;
-    //         data[pathDestination[0]].items = [
-    //             ...itemsDestination.slice(0, destination.index),
-    //             element,
-    //             ...itemsDestination.slice(destination.index)
-    //         ];
-    //     }
-
-    //     setData(data);
-
-    // };
-
     const handleDragEnd             = (result) => {
-        // const { draggableId, source, destination } = val;
+        const { 
+            source, 
+            destination 
+        }                           = result;
 
-        // const [sourceGroup] = data.filter(
-        //     column => column.groupName === source.droppableId
-        // );
+        const [sourceGroup]         = data.filter(item => item.id === source.droppableId);
+        const [destinationGroup]    = destination ? data.filter(item => item.id === destination.droppableId) : { ...sourceGroup };
+        // const [moving]              = sourceGroup.items.filter(item => item.id === draggableId);
+        const moving                = sourceGroup.items[source.index];
+        const newSourceGroup        = sourceGroup.items.splice(source.index, 1);
+        const newDestinationGroup   = destinationGroup.items.splice(destination.index, 0, moving);
 
-        // const [destinationGroup] = destination ? data.filter(column => column.groupName === destination.droppableId) : { ...sourceGroup };
+        const newData               = data.map(item => {
+            
+            if (item.id === source.id) {
+                return {
+                    ...item,
+                    items: newSourceGroup
+                };
+            }else if (item.id === destination.id) {
+                return {
+                    ...item,
+                    items: newDestinationGroup
+                };
+            }
 
+            return item;
+        });
 
-        // const [movingTask] = sourceGroup.items.filter(t => t.id === draggableId);
-
-        // const newSourceGroupTasks = sourceGroup.items.splice(source.index, 1);
-        // const newDestinationGroupTasks = destinationGroup.tasks.splice(
-        //     destination.index,
-        //     0,
-        //     movingTask
-        // );
-
-        // const newTaskList = data.map(column => {
-        //     if (column.groupName === source.groupName) {
-        //         return {
-        //         groupName: column.groupName,
-        //         tasks: newSourceGroupTasks
-        //         };
-        //     }
-        //     if (column.groupName === destination.groupName) {
-        //         return {
-        //         groupName: column.groupName,
-        //         tasks: newDestinationGroupTasks
-        //         };
-        //     }
-        //     return column;
-        // });
-
-        console.log(newTaskList);
-
-        // setData(newTaskList);
+        setData(newData);
     };
 
     return (
