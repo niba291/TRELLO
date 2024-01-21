@@ -18,15 +18,17 @@ export function Container(props) {
                             <h1 className="border-black-base border-b py-1 px-2">{name}</h1>
                         </hgroup>      
                         <div>
-                            {items.map((itemCard, index) => (
-                                <Draggable draggableId={`${id}${itemCard.id}`} index={index} key={index}>
-                                    {(provided) => (
-                                        <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-                                            <Card id={`${id}${itemCard.id}`} item={itemCard}/>
-                                        </div>
-                                    )}
-                                </Draggable>
-                            ))}
+                            {items.map((itemCard, index) => {
+                                return (
+                                    <Draggable draggableId={`${itemCard.id}`} index={index} key={`${index}-${id}-${itemCard.id}}`}>
+                                        {(provided) => (
+                                            <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
+                                                <Card id={`${id}${itemCard.id}`} item={itemCard}/>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                );
+                            })}
                             {provided.placeholder}
                         </div>
                     </div>

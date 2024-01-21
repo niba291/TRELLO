@@ -4,7 +4,6 @@ import { useState }                                                             
 // COMPONENTS===============================================================================================================
 import { DragDropContext }                                                                      from "react-beautiful-dnd";
 import { Container }                                                                            from "../components/Container";
-import { JSONPath } from "jsonpath-plus";
 
 function App() {
 
@@ -13,18 +12,18 @@ function App() {
             id                      : "A",
             name                    : "name 1",
             items                   : [
-                {id: 1, name: "test 1"},
-                {id: 2, name: "test 2"},
-                {id: 3, name: "test 3"},
+                {id: "1", name: "test 1"},
+                {id: "2", name: "test 2"},
+                {id: "3", name: "test 3"},
             ]
         },
         {
             id                      : "B",
             name                    : "name 2",
             items                   : [
-                {id: 4, name: "test"},
-                {id: 5, name: "test 2"},
-                {id: 6, name: "test 3"},
+                {id: "4", name: "test"},
+                {id: "5", name: "test 2"},
+                {id: "6", name: "test 3"},
             ]
         }
     ]);
@@ -35,30 +34,12 @@ function App() {
             destination 
         }                           = result;
 
-        const [sourceGroup]         = data.filter(item => item.id === source.droppableId);
+        const newData               = data;
+        const [sourceGroup]         = newData.filter(item => item.id === source.droppableId);
         const [destinationGroup]    = destination ? data.filter(item => item.id === destination.droppableId) : { ...sourceGroup };
-        // const [moving]              = sourceGroup.items.filter(item => item.id === draggableId);
         const moving                = sourceGroup.items[source.index];
-        const newSourceGroup        = sourceGroup.items.splice(source.index, 1);
-        const newDestinationGroup   = destinationGroup.items.splice(destination.index, 0, moving);
-
-        const newData               = data.map(item => {
-            
-            if (item.id === source.id) {
-                return {
-                    ...item,
-                    items: newSourceGroup
-                };
-            }else if (item.id === destination.id) {
-                return {
-                    ...item,
-                    items: newDestinationGroup
-                };
-            }
-
-            return item;
-        });
-
+        sourceGroup.items.splice(source.index, 1);
+        destinationGroup.items.splice(destination.index, 0, moving);
         setData(newData);
     };
 
