@@ -14,7 +14,7 @@ export function Container(props) {
         <Droppable droppableId={`${id}`} type="group">
             {(provided) => {
                 return (
-                    <div className="p-2 m-2 min-w-80 max-w-80 shadow-md rounded flex flex-wrap self-start" {...provided.droppableProps} ref={provided.innerRef}>
+                    <div className="p-2 m-2 min-w-80 max-w-80 shadow-md rounded flex flex-wrap self-start bg-white" {...provided.droppableProps} ref={provided.innerRef}>
                         <hgroup className="flex border-black-base border-b py-1 px-2 mb-3 w-full">
                             <h1 className="w-[90%]">{name}</h1>
                             <button className="w-[10%]">
@@ -32,10 +32,10 @@ export function Container(props) {
                         <div className="w-full">
                             {items.map((itemCard, index) => {
                                 return (
-                                    <Draggable draggableId={`${itemCard.id}`} index={index} key={`${index}-${id}-${itemCard.id}}`}>
+                                    <Draggable draggableId={`${index}-${id}-${itemCard.id}}`} index={index} key={`${index}-${id}-${itemCard.id}}`}>
                                         {(provided) => (
                                             <div {...provided.dragHandleProps} {...provided.draggableProps} ref={provided.innerRef}>
-                                                <Card id={`${id}${itemCard.id}`} item={itemCard}/>
+                                                <Card item={itemCard}/>
                                             </div>
                                         )}
                                     </Draggable>
